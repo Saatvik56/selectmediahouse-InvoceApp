@@ -1,184 +1,618 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>New Invoice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --primary-color: #007bff;
+      --secondary-color: #6c757d;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-color: #333;
+      --label-color: #555;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
       margin: 0;
-      padding: 30px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-header {
+      width: 100%;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      text-align: center;
+      padding: 30px 0;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      /* Boxed effect */
+    }
+
+    .main-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .container {
-      background: #EEF2FF;
-      padding: 25px 35px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-      width: 600px;
+      width: 90%;
+      max-width: 90%;
+      /* Cover whole screen as requested */
+      padding: 10px 15px;
+      /* Minimal margin */
+      box-sizing: border-box;
     }
 
-    h2, h3 {
-      text-align: center;
+    .page-title {
+      display: flex;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 600;
       margin-bottom: 15px;
       color: #333;
+      padding-left: 5px;
+    }
+
+    .page-title i {
+      margin-right: 10px;
+    }
+
+    /* Card Style */
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 20px;
+      /* Compact padding */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+      color: var(--text-color);
+      font-size: 16px;
+      font-weight: 600;
+      flex-wrap: wrap;
+      /* responsive wrap */
+      gap: 10px;
+    }
+
+    .section-header i {
+      margin-right: 8px;
+      color: #555;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .col-full {
+      grid-column: 1 / -1;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 15px;
     }
 
     label {
       display: block;
-      margin-top: 10px;
-      font-weight: bold;
-      color: #444;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--label-color);
     }
 
-    input, textarea {
+    label.required::after {
+      content: " *";
+      color: var(--danger-color);
+    }
+
+    input,
+    textarea,
+    select {
       width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
       font-size: 14px;
+      font-family: inherit;
+      color: #333;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     }
 
     textarea {
       resize: vertical;
+      min-height: 80px;
     }
 
-    button {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 18px;
-      font-size: 14px;
+    /* Items Section */
+    .items-container {
+      margin-top: 10px;
+    }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 0.5fr 0.5fr 1fr 40px;
+      gap: 15px;
+      align-items: start;
+      margin-bottom: 15px;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .bg-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 42px;
+      /* Match input height roughly */
+      margin-top: 25px;
+      /* Align with inputs */
+    }
+
+    .btn-add {
+      background: var(--success-color);
+      color: white;
       border: none;
-      border-radius: 5px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
     }
 
-    button[type="submit"] {
-      background: #007bff;
+    .btn-add:hover {
+      background: #218838;
+    }
+
+    .btn-remove {
+      background: var(--danger-color);
       color: white;
-      width: 100%;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
     }
 
-    button[type="button"] {
-      background: #28a745;
+    .btn-remove:hover {
+      background: #c82333;
+    }
+
+    /* Footer Buttons */
+    .form-footer {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      margin-bottom: 40px;
+    }
+
+    .btn-submit {
+      background: var(--primary-color);
       color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    button:hover {
-      opacity: 0.9;
+    .btn-submit:hover {
+      background: #0056b3;
+      transform: translateY(-1px);
     }
 
-    .section {
-      margin-bottom: 25px;
-      border-top: 1px solid #ddd;
-      padding-top: 15px;
+    @media (max-width: 768px) {
+      .item-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        position: relative;
+        padding-top: 35px;
+        /* Space for remove button */
+      }
+
+      .bg-action-btn {
+        margin-top: 0;
+        justify-content: flex-end;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+      }
+
+      .main-header h1 {
+        font-size: 18px;
+        padding: 0 10px;
+      }
+
+      .card {
+        padding: 15px;
+      }
+
+      .page-title {
+        font-size: 16px;
+      }
+
+      .section-header {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
+
 <body>
+
+  <div class="main-header">
+    <h1>Select Media House Invoice Generator</h1>
+  </div>
+
   <div class="container">
-    <h2>Create New Invoice</h2>
+    <div class="page-title">
+      <i class="fas fa-file-invoice"></i> Create New Invoice
+    </div>
+
     <form method="POST">
 
-      <div class="section">
-        <label>Invoice No:</label>
-        <input type="text" name="invoice_no" required>
-
-        <label>Invoice Date:</label>
-        <input type="date" name="invoice_date" required>
-
-        <label>Buyer Order No:</label>
-        <input type="text" name="buyer_order_no">
-
-        <label>Date of Supply:</label>
-        <input type="date" name="supply_date" required>
-
-        <label>Transporter Name:</label>
-        <input type="text" name="transporter_name">
-
-        <label>Vehicle No:</label>
-        <input type="text" name="vehicle_no">
-
-        <label>GR / RR No:</label>
-        <input type="text" name="gr_no">
-      </div>
-
-      <div class="section">
-        <h3>Billed To</h3>
-        <label>Name:</label>
-        <input type="text" name="client_name" required>
-        <label>Address:</label>
-        <textarea name="client_address"></textarea>
-        <label>State:</label>
-        <input type="text" name="client_state">
-        <label>State Code:</label>
-        <input type="text" name="client_state_code">
-        <label>GSTIN:</label>
-        <input type="text" name="client_gstin">
-      </div>
-
-      <div class="section">
-        <h3>Shipped To</h3>
-        <label>Name:</label>
-        <input type="text" name="ship_name">
-        <label>Address:</label>
-        <textarea name="ship_address"></textarea>
-        <label>State:</label>
-        <input type="text" name="ship_state">
-        <label>State Code:</label>
-        <input type="text" name="ship_state_code">
-        <label>GSTIN:</label>
-        <input type="text" name="ship_gstin">
-      </div>
-
-      <div class="section">
-        <h3>Items</h3>
-        <div id="items">
-          <div>
-            <label>Description:</label>
-            <input type="text" name="item_desc[]" required>
-            <label>HSN:</label>
-            <input type="text" name="item_hsn[]">
-            <label>Quantity:</label>
-            <input type="number" name="item_qty[]" step="0.01" required>
-            <label>UOM:</label>
-            <input type="text" name="item_uom[]">
-            <label>Rate:</label>
-            <input type="number" name="item_rate[]" step="0.01" required>
+      <!-- Invoice Information -->
+      <div class="card">
+        <div class="section-header">
+          <span><i class="fas fa-info-circle"></i> Invoice Information</span>
+        </div>
+        <div class="row" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="form-group">
+            <label class="required">Invoice Number</label>
+            <input type="text" name="invoice_no" required placeholder="Enter Invoice No"
+              value="{{ data.invoice_no if data else '' }}">
+          </div>
+          <div class="form-group">
+            <label class="required">Invoice Date</label>
+            <input type="date" name="invoice_date" required id="invoiceDate"
+              value="{{ data.invoice_date if data else '' }}">
+          </div>
+          <div class="form-group">
+            <label>Date of Supply</label>
+            <input type="date" name="supply_date" required id="supplyDate"
+              value="{{ data.supply_date if data else '' }}">
+          </div>
+          <div class="form-group">
+            <label>Buyer Order No</label>
+            <input type="text" name="buyer_order_no" placeholder="Optional"
+              value="{{ data.buyer_order_no if data else '' }}">
           </div>
         </div>
-        <button type="button" onclick="addItemRow()">+ Add Item</button>
       </div>
 
-      <div class="section">
-        <h3>GST Details</h3>
-        <label>CGST %:</label>
-        <input type="number" name="cgst_rate" step="0.01" value="9">
-        <label>SGST %:</label>
-        <input type="number" name="sgst_rate" step="0.01" value="9">
-        <label>IGST %:</label>
-        <input type="number" name="igst_rate" step="0.01" value="0">
+      <!-- Transport Information -->
+      <div class="card">
+        <div class="section-header">
+          <span><i class="fas fa-truck"></i> Transport Information</span>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label>Transporter Name</label>
+            <input type="text" name="transporter_name" value="{{ data.transporter_name if data else '' }}">
+          </div>
+          <div class="form-group">
+            <label>Vehicle No.</label>
+            <input type="text" name="vehicle_no" value="{{ data.vehicle_no if data else '' }}">
+          </div>
+          <div class="form-group">
+            <label>GR / RR No.</label>
+            <input type="text" name="gr_no" value="{{ data.gr_no if data else '' }}">
+          </div>
+        </div>
       </div>
-      
-      <label>Electronic Reference No.:</label>
-      <input type="text" name="reference_no"><br><br>
 
-      <button type="submit">Generate Invoice</button>
+      <!-- Parties -->
+      <div class="row" style="gap: 15px;">
+        <!-- Billed To -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+          <div class="section-header">
+            <span><i class="fas fa-user"></i> Billed To</span>
+          </div>
+          <div class="form-group">
+            <label class="required">Client Name</label>
+            <input type="text" name="client_name" required
+              value="{{ data.billed_to.name if data and data.billed_to else '' }}">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <textarea name="client_address">{{ data.billed_to.address if data and data.billed_to else '' }}</textarea>
+          </div>
+          <div class="row" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" name="client_state"
+                value="{{ data.billed_to.state if data and data.billed_to else '' }}">
+            </div>
+            <div class="form-group">
+              <label>State Code</label>
+              <input type="text" name="client_state_code"
+                value="{{ data.billed_to.state_code if data and data.billed_to else '' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>GSTIN</label>
+            <input type="text" name="client_gstin"
+              value="{{ data.billed_to.gstin if data and data.billed_to else '' }}">
+          </div>
+        </div>
+
+        <!-- Shipped To -->
+        <div class="card" style="flex: 1; min-width: 300px;">
+          <div class="section-header">
+            <span><i class="fas fa-shipping-fast"></i> Shipped To</span>
+          </div>
+          <div class="form-group">
+            <label>Ship Name</label>
+            <input type="text" name="ship_name" value="{{ data.shipped_to.name if data and data.shipped_to else '' }}">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <textarea name="ship_address">{{ data.shipped_to.address if data and data.shipped_to else '' }}</textarea>
+          </div>
+          <div class="row" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" name="ship_state"
+                value="{{ data.shipped_to.state if data and data.shipped_to else '' }}">
+            </div>
+            <div class="form-group">
+              <label>State Code</label>
+              <input type="text" name="ship_state_code"
+                value="{{ data.shipped_to.state_code if data and data.shipped_to else '' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>GSTIN</label>
+            <input type="text" name="ship_gstin"
+              value="{{ data.shipped_to.gstin if data and data.shipped_to else '' }}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Section -->
+      <div class="card">
+        <div class="section-header">
+          <span><i class="fas fa-list"></i> Items</span>
+          <button type="button" class="btn-add" onclick="addItemRow()">
+            <i class="fas fa-plus"></i> Add Item
+          </button>
+        </div>
+
+        <div id="items-container" class="items-container">
+          {% if data and data.line_items %}
+          {% for item in data.line_items %}
+          {% if item.description %} <!-- Filter empty padded rows -->
+          <div class="item-row">
+            <div class="form-group">
+              <label class="required">Description</label>
+              <input type="text" name="item_desc[]" required placeholder="Item Name" value="{{ item.description }}">
+            </div>
+            <div class="form-group">
+              <label>HSN</label>
+              <input type="text" name="item_hsn[]" value="{{ item.hsn }}">
+            </div>
+            <div class="form-group">
+              <label class="required">Qty</label>
+              <input type="number" name="item_qty[]" step="0.01" required value="{{ item.qty }}">
+            </div>
+            <div class="form-group">
+              <label>UOM</label>
+              <input type="text" name="item_uom[]" value="{{ item.uom }}">
+            </div>
+            <div class="form-group">
+              <label class="required">Rate</label>
+              <input type="number" name="item_rate[]" step="0.01" required value="{{ item.rate }}">
+            </div>
+            <div class="bg-action-btn">
+              <button type="button" class="btn-remove" onclick="this.closest('.item-row').remove()"><i
+                  class="fas fa-times"></i></button>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+          <!-- If all items were empty (e.g. initial save with no items?), ensure at least one row exists -->
+          <!-- But better yet, if the loop produced no output, add a default row via JS? Or just let user add one. -->
+          <!-- Let's add a default empty row if no items are present -->
+          {% if not data.line_items or data.line_items|selectattr("description")|list|length == 0 %}
+          <div class="item-row">
+            <div class="form-group">
+              <label class="required">Description</label>
+              <input type="text" name="item_desc[]" required placeholder="Item Name">
+            </div>
+            <div class="form-group">
+              <label>HSN</label>
+              <input type="text" name="item_hsn[]">
+            </div>
+            <div class="form-group">
+              <label class="required">Qty</label>
+              <input type="number" name="item_qty[]" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label>UOM</label>
+              <input type="text" name="item_uom[]">
+            </div>
+            <div class="form-group">
+              <label class="required">Rate</label>
+              <input type="number" name="item_rate[]" step="0.01" required>
+            </div>
+            <div class="bg-action-btn">
+            </div>
+          </div>
+          {% endif %}
+
+          {% else %}
+          <!-- Default initial row when no data -->
+          <div class="item-row">
+            <div class="form-group">
+              <label class="required">Description</label>
+              <input type="text" name="item_desc[]" required placeholder="Item Name">
+            </div>
+            <div class="form-group">
+              <label>HSN</label>
+              <input type="text" name="item_hsn[]">
+            </div>
+            <div class="form-group">
+              <label class="required">Qty</label>
+              <input type="number" name="item_qty[]" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label>UOM</label>
+              <input type="text" name="item_uom[]">
+            </div>
+            <div class="form-group">
+              <label class="required">Rate</label>
+              <input type="number" name="item_rate[]" step="0.01" required>
+            </div>
+            <div class="bg-action-btn">
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- GST Information -->
+      <div class="card">
+        <div class="section-header">
+          <span><i class="fas fa-percentage"></i> GST Information</span>
+        </div>
+        <div class="row" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+          <div class="form-group">
+            <label>CGST Rate (%)</label>
+            <input type="number" name="cgst_rate" step="0.01" value="{{ data.cgst_rate if data else '9' }}">
+          </div>
+          <div class="form-group">
+            <label>SGST Rate (%)</label>
+            <input type="number" name="sgst_rate" step="0.01" value="{{ data.sgst_rate if data else '9' }}">
+          </div>
+          <div class="form-group">
+            <label>IGST Rate (%)</label>
+            <input type="number" name="igst_rate" step="0.01" value="{{ data.igst_rate if data else '0' }}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="card">
+        <div class="section-header">
+          <span><i class="fas fa-file-alt"></i> Additional Information</span>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label>Electronic Reference No.</label>
+            <input type="text" name="reference_no"
+              value="{{ data.reference_no if data and data.reference_no != 'N/A' else '' }}">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-eye"></i> Preview Invoice
+        </button>
+      </div>
+
     </form>
   </div>
 
   <script>
+    // Set default dates if not already set (e.g. creating new)
+    const today = new Date().toISOString().split('T')[0];
+    const invoiceDate = document.getElementById('invoiceDate');
+    const supplyDate = document.getElementById('supplyDate');
+
+    // Only set if value is empty
+    if (invoiceDate && !invoiceDate.value) invoiceDate.value = today;
+    if (supplyDate && !supplyDate.value) supplyDate.value = today;
+
     function addItemRow() {
-      let container = document.getElementById("items");
-      let newRow = container.children[0].cloneNode(true);
+      const container = document.getElementById("items-container");
+
+      // Clone the LAST row as template, or create a fresh one if we are cautious
+      // If we clone an existing filled row, we must clear it.
+
+      // Find a row to clone. Ideally the first one or create fresh.
+      const rows = container.querySelectorAll('.item-row');
+      let newRow;
+
+      if (rows.length > 0) {
+        newRow = rows[0].cloneNode(true);
+      } else {
+        // Should not happen as we ensure 1 row, but for safety:
+        // (This would be complex to recreate HTML in JS string, so let's rely on existence)
+        return;
+      }
+
+      // Clear values
       newRow.querySelectorAll("input").forEach(input => input.value = "");
+
+      // Handle remove button
+      const actionDiv = newRow.querySelector('.bg-action-btn');
+      actionDiv.innerHTML = '';
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.type = 'button';
+      deleteBtn.className = 'btn-remove';
+      deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+      deleteBtn.onclick = function () {
+        if (container.querySelectorAll('.item-row').length > 1) {
+          this.closest('.item-row').remove();
+        }
+      };
+      actionDiv.appendChild(deleteBtn);
+
       container.appendChild(newRow);
     }
   </script>
 </body>
+
 </html>

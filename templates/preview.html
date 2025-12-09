@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Preview</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .controls a {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .controls a:hover {
+            transform: scale(1.05);
+        }
+
+        .download-btn {
+            background-color: #4CAF50;
+            /* Green */
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            /* Gray */
+        }
+
+        .preview-container {
+            width: 210mm;
+            /* A4 width */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* We use an iframe to contain the invoice styles */
+        iframe {
+            width: 100%;
+            height: 297mm;
+            /* A4 height */
+            border: none;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls">
+        <a href="{{ url_for('new_invoice', invoice_no=invoice_no) }}" class="back-btn">Go Back & Edit</a>
+        <a href="{{ url_for('generate_pdf', invoice_no=invoice_no) }}" class="download-btn">Download PDF</a>
+    </div>
+
+    <div class="preview-container">
+        <iframe srcdoc="{{ invoice_html | e }}" scrolling="no"></iframe>
+    </div>
+
+</body>
+
+</html>
