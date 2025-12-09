@@ -90,7 +90,11 @@ def get_invoice_data(form):
         print(f"Warning: Logo file not found at {logo_path}")
         
     return data
-
+@app.route("/healthz")
+def health_check():
+    # Simple check to ensure the server is responsive
+    return "OK", 200
+    
 @app.route("/")
 def home():
     return '''
